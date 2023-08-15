@@ -1,0 +1,61 @@
+name: promote
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+      env:
+        required: true
+        type: string
+      project_name:
+        required: true
+        type: string
+      
+
+jobs:
+  check-envs:
+    runs-on: ubuntu-22.04
+    outputs:
+      noop: ${{ steps.noop.outputs.should_skip }}
+    steps:
+      - name: Checkout private tools
+        uses: actions/checkout@v3
+        with:
+          repository: my-org/my-private-tools
+          token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
+          path: ${{ project_name }}
+
+      - name: Write inplace test
+        id: lookupSdkVersion
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq e -i '.image.tag = "${{ input.tag }}"' ${{ input.project_name }}/${{ input.env }}/specs.yaml
+
+      - name: Push file
+        id: push
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+          API_TOKEN_GITHUB: ${{ steps.generate_token.outputs.token }}
+        with:
+          source_file: ${{ input.project_name }}/${{ input.env }}/specs.yaml
+          destination_repo: 'spazious/helm-specs'
+          destination_branch: master
+          user_email: '${{ github.event.repository.name }}@spazious.rocks'
+          user_name: '${{ github.event.repository.name }}'
+          commit_message: 'deployment from ${{ github.event.repository.name }}'
+
+      - name: Retry on failure
+        if: steps.push.outcome == 'failure'
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+          API_TOKEN_GITHUB: ${{ steps.generate_token.outputs.token }}
+        with:
+          source_file: ${{ input.project_name }}/${{ input.env }}/specs.yaml
+          destination_repo: 'spazious/helm-specs'
+          destination_branch: master
+          user_email: '${{ github.event.repository.name }}@spazious.rocks'
+          user_name: '${{ github.event.repository.name }}'
+          commit_message: 'deployment from ${{ github.event.repository.name }}'
