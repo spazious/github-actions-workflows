@@ -13,8 +13,8 @@ on:
         required: true
         type: string
       
-
 jobs:
+
   check-envs:
     runs-on: ubuntu-22.04
     outputs:
@@ -31,7 +31,7 @@ jobs:
         id: lookupSdkVersion
         uses: mikefarah/yq@master
         with:
-          cmd: yq e -i '.image.tag = "${{ input.tag }}"' ${{ input.project_name }}/${{ input.env }}/specs.yaml
+          cmd: yq e -i '.image.tag = "${{ inputs.tag }}"' ${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
 
       - name: Push file
         id: push
@@ -40,7 +40,7 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ steps.generate_token.outputs.token }}
         with:
-          source_file: ${{ input.project_name }}/${{ input.env }}/specs.yaml
+          source_file: ${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
           destination_repo: 'spazious/helm-specs'
           destination_branch: master
           user_email: '${{ github.event.repository.name }}@spazious.rocks'
@@ -53,7 +53,7 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ steps.generate_token.outputs.token }}
         with:
-          source_file: ${{ input.project_name }}/${{ input.env }}/specs.yaml
+          source_file: ${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
           destination_repo: 'spazious/helm-specs'
           destination_branch: master
           user_email: '${{ github.event.repository.name }}@spazious.rocks'
