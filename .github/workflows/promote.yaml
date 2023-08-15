@@ -43,7 +43,7 @@ jobs:
           API_TOKEN_GITHUB: ${{ secrets.GH_PAT }}
         with:
           source_file: source/${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
-          destination_repo: 'spazious/helm-specs'
+          destination_repo: 'spazious/helm-specs/${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml'
           destination_branch: master
           user_email: '${{ github.event.repository.name }}@spazious.rocks'
           user_name: '${{ github.event.repository.name }}'
@@ -56,7 +56,7 @@ jobs:
           API_TOKEN_GITHUB: ${{ steps.generate_token.outputs.token }}
         with:
           source_file: source/${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
-          destination_repo: 'spazious/helm-specs'
+          destination_repo: 'spazious/helm-specs/${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml'
           destination_branch: master
           user_email: '${{ github.event.repository.name }}@spazious.rocks'
           user_name: '${{ github.event.repository.name }}'
