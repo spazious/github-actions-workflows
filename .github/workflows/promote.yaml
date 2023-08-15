@@ -33,7 +33,7 @@ jobs:
         id: lookupSdkVersion
         uses: mikefarah/yq@master
         with:
-          cmd: yq e -i '.image.tag = "${{ inputs.tag }}"' helm-specs/${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
+          cmd: yq e -i '.image.tag = "${{ inputs.tag }}"' ${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
 
       - name: Push file
         id: push
