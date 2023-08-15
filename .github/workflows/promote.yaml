@@ -26,7 +26,7 @@ jobs:
       - name: Checkout private tools
         uses: actions/checkout@v3
         with:
-          repository: my-org/my-private-tools
+          repository: spazious/helm-specs
           token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
           path: ${{ inputs.project_name }}
 
