@@ -28,20 +28,21 @@ jobs:
         with:
           repository: spazious/helm-specs
           token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
+          path: source
 
       - name: Write inplace tag
         id: lookupSdkVersion
         uses: mikefarah/yq@master
         with:
-          cmd: yq e -i '.image.tag = "${{ inputs.tag }}"' ${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
+          cmd: yq e -i '.image.tag = "${{ inputs.tag }}"' source/${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
 
       - name: Push file
         id: push
         uses: dmnemec/copy_file_to_another_repo_action@main
         env:
-          API_TOKEN_GITHUB: ${{ steps.generate_token.outputs.token }}
+          API_TOKEN_GITHUB: ${{ secrets.GH_PAT }}
         with:
-          source_file: ${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
+          source_file: source/${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
           destination_repo: 'spazious/helm-specs'
           destination_branch: master
           user_email: '${{ github.event.repository.name }}@spazious.rocks'
@@ -49,11 +50,12 @@ jobs:
           commit_message: 'deployment from ${{ github.event.repository.name }}'
 
       - name: Retry on failure
+        if: steps.push.outcome == 'failure'
         uses: dmnemec/copy_file_to_another_repo_action@main
         env:
           API_TOKEN_GITHUB: ${{ steps.generate_token.outputs.token }}
         with:
-          source_file: ${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
+          source_file: source/${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
           destination_repo: 'spazious/helm-specs'
           destination_branch: master
           user_email: '${{ github.event.repository.name }}@spazious.rocks'
