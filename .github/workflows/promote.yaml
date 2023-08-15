@@ -25,7 +25,7 @@ jobs:
         with:
           repository: my-org/my-private-tools
           token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
-          path: ${{ project_name }}
+          path: ${{ inputs.project_name }}
 
       - name: Write inplace test
         id: lookupSdkVersion
