@@ -23,18 +23,17 @@ jobs:
     outputs:
       noop: ${{ steps.noop.outputs.should_skip }}
     steps:
-      - name: Checkout private tools
+      - name: Checkout Helm Specs
         uses: actions/checkout@v3
         with:
           repository: spazious/helm-specs
           token: ${{ secrets.GH_PAT }} # `GH_PAT` is a secret that contains your PAT
-          path: ${{ inputs.project_name }}
 
       - name: Write inplace test
         id: lookupSdkVersion
         uses: mikefarah/yq@master
         with:
-          cmd: yq e -i '.image.tag = "${{ inputs.tag }}"' ${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
+          cmd: yq e -i '.image.tag = "${{ inputs.tag }}"' helm-specs/${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
 
       - name: Push file
         id: push
