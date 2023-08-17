@@ -11,11 +11,13 @@ on:
       mode:
         description: 'yarn mode parameter'
         required: true
-        default: 'production'
+        default: 'development'
+        type: string
       environtment:
         description: 'environment where the service will be deployed'
         required: true
         default: 'stg'
+        type: string
     secrets:
       GH_PAT:
         required: true
