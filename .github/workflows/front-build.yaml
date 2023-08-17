@@ -54,14 +54,14 @@ jobs:
             authMethod: token
             token: ${{ secrets.VAULT_TOKEN }}
 
-        - name: Get Service Secrets
-          id: service-secrets
-          uses: bjerkio/vault-action@v1.0.2
-          with:
-            endpoint: "https://vault.services.spazious.com"
-            path: "${{ inputs.project_name }}/ci"
-            authMethod: token
-            token: ${{ secrets.VAULT_TOKEN }}
+        # - name: Get Service Secrets
+        #   id: service-secrets
+        #   uses: bjerkio/vault-action@v1.0.2
+        #   with:
+        #     endpoint: "https://vault.services.spazious.com"
+        #     path: "${{ inputs.project_name }}/ci"
+        #     authMethod: token
+        #     token: ${{ secrets.VAULT_TOKEN }}
 
         - name: Checkout
           uses: actions/checkout@v2
