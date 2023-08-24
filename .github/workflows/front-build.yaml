@@ -67,13 +67,14 @@ jobs:
           uses: eLco/setup-vault@v1
           with:
             version: '~1.9.2'
-            
+
         - name: Create .env
           env:
             VAULT_ADDR: "https://vault.services.spazious.com"
             VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
           run: |
             vault kv get -format yaml -field=data "${{ inputs.project_name }}/ci"| sed 's/: /=/' > .env
+            cat .env
 
         - name: Checkout
           uses: actions/checkout@v2
