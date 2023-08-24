@@ -40,6 +40,9 @@ jobs:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
     steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+
         - name: Setup Pritunl Profile and Start VPN Connection
           uses: nathanielvarona/pritunl-client-github-action@v1
           with:
@@ -74,10 +77,6 @@ jobs:
             VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
           run: |
             vault kv get -format yaml -field=data "${{ inputs.project_name }}/ci"| sed 's/: /=/' > .env
-            cat .env
-
-        - name: Checkout
-          uses: actions/checkout@v2
        
         - name: Getting Stage Secrets
           uses: shine1594/secrets-to-env-action@master
