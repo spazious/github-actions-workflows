@@ -54,14 +54,24 @@ jobs:
             authMethod: token
             token: ${{ secrets.VAULT_TOKEN }}
 
-        # - name: Get Service Secrets
-        #   id: service-secrets
-        #   uses: bjerkio/vault-action@v1.0.2
-        #   with:
-        #     endpoint: "https://vault.services.spazious.com"
-        #     path: "${{ inputs.project_name }}/ci"
-        #     authMethod: token
-        #     token: ${{ secrets.VAULT_TOKEN }}
+        - name: Get Service Secrets
+          id: service-secrets
+          uses: bjerkio/vault-action@v1.0.2
+          with:
+            endpoint: "https://vault.services.spazious.com"
+            path: "${{ inputs.project_name }}/ci"
+            authMethod: token
+            token: ${{ secrets.VAULT_TOKEN }}
+          
+        - name: Setup Vault Cli
+          uses: eLco/setup-vault@v1
+          with:
+            version: '~1.9.2'
+          env:
+            VAULT_ADDR: "https://vault.services.spazious.com"
+            VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+          run: |
+            vault kv get -format yaml -field=data "${{ inputs.project_name }}/ci"| sed 's/: /=/' > .env
 
         - name: Checkout
           uses: actions/checkout@v2
