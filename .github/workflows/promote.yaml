@@ -66,7 +66,7 @@ jobs:
           commit_message: 'deployment from ${{ github.event.repository.name }}'
 
       - name: Sync ArgoCD Application
-        uses: omegion/argocd-actions@master
+        uses: safe2008/argocd-app-actions@main
         with:
           address: "argocd.services.spazious.com"
           token: ${{ secrets.ARGOCD_TOKEN }}
