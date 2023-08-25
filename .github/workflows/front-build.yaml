@@ -78,14 +78,6 @@ jobs:
           run: |
             vault kv get -format yaml -field=data "${{ inputs.project_name }}/ci"| sed 's/: /=/' > .env
        
-        - name: Getting Stage Secrets
-          uses: shine1594/secrets-to-env-action@master
-          with:
-            secrets: ${{ toJSON(secrets) }}
-            secrets_env: development
-            file_name_dev: .env
-            prefix_dev: __STG__
-
         - name: Setup AWS ECR Details
           uses: aws-actions/configure-aws-credentials@v1
           with:
