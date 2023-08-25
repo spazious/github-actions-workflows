@@ -16,7 +16,7 @@ on:
       GH_PAT:
         required: true
       ARGOCD_TOKEN:
-        required: true
+        required: false
       
 jobs:
   check-envs:
@@ -65,10 +65,3 @@ jobs:
           user_name: '${{ github.event.repository.name }}'
           commit_message: 'deployment from ${{ github.event.repository.name }}'
 
-      - name: Sync ArgoCD Application
-        uses: omegion/argocd-actions@master
-        with:
-          address: "argocd.services.spazious.com"
-          token: ${{ secrets.ARGOCD_TOKEN }}
-          action: sync
-          appName: '${{ github.event.repository.name }}'
