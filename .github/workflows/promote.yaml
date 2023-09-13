@@ -77,4 +77,4 @@ jobs:
           address: "argocd.services.spazious.com"
           token: ${{ secrets.ARGOCD_TOKEN }}
           action: sync
-          appName: ${{ github.event.repository.name }}
+          application: ${{ github.event.repository.name }}
