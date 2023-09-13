@@ -66,15 +66,15 @@ jobs:
           user_name: '${{ github.event.repository.name }}'
           commit_message: 'deployment from ${{ github.event.repository.name }}'
     
-      - name: Setup Pritunl Profile and Start VPN Connection
-        uses: nathanielvarona/pritunl-client-github-action@v1
-        with:
-          profile-file: ${{ secrets.PRITUNL_PROFILE_FILE }}
+      # - name: Setup Pritunl Profile and Start VPN Connection
+      #   uses: nathanielvarona/pritunl-client-github-action@v1
+      #   with:
+      #     profile-file: ${{ secrets.PRITUNL_PROFILE_FILE }}
 
-      - name: Sync ArgoCD Application
-        uses: omegion/argocd-actions@v1
-        with:
-          address: "argocd.services.spazious.com"
-          token: ${{ secrets.ARGOCD_TOKEN }}
-          action: sync
-          appName: ${{ github.event.repository.name }}
+      # - name: Sync ArgoCD Application
+      #   uses: omegion/argocd-actions@v1
+      #   with:
+      #     address: "argocd.services.spazious.com"
+      #     token: ${{ secrets.ARGOCD_TOKEN }}
+      #     action: sync
+      #     appName: ${{ github.event.repository.name }}
