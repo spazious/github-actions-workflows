@@ -72,9 +72,9 @@ jobs:
           profile-file: ${{ secrets.PRITUNL_PROFILE_FILE }}
 
       - name: Sync ArgoCD Application
-        uses: cheelim1/argocd-actions@v0.1.18-alpha
+        uses: omegion/argocd-actions@v1
         with:
           address: "argocd.services.spazious.com"
           token: ${{ secrets.ARGOCD_TOKEN }}
           action: sync
-          application: ${{ github.event.repository.name }}
+          appName: ${{ github.event.repository.name }}
