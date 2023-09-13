@@ -68,7 +68,7 @@ jobs:
       - name: Sync ArgoCD Application
         uses: omegion/argocd-actions@master
         with:
-          address: "https://argocd.services.spazious.com"
+          address: "argocd.services.spazious.com"
           token: ${{ secrets.ARGOCD_TOKEN }}
           action: sync
           appName: ${{ github.event.repository.name }}
