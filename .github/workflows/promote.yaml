@@ -66,9 +66,9 @@ jobs:
           commit_message: 'deployment from ${{ github.event.repository.name }}'
 
       - name: Sync ArgoCD Application
-        uses: safe2008/argocd-app-actions@main
+        uses: cheelim1/argocd-actions@v0.1.18-alpha
         with:
           address: "argocd.services.spazious.com"
           token: ${{ secrets.ARGOCD_TOKEN }}
-          insecure: false
+          action: sync
           appName: ${{ github.event.repository.name }}
