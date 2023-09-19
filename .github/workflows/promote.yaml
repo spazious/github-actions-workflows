@@ -38,6 +38,28 @@ jobs:
         with:
           cmd: yq e -i '.image.tag = "${{ inputs.tag }}"' source/${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
 
+      - name: Write inplace tag: Beat
+        if: ${{ inputs.project_name }} == 'spazious-backend'
+        id: lookupSdkVersion
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq e -i '.image.tag = "${{ inputs.tag }}"' source/backend-beat-worker/${{ inputs.env }}/specs.yaml
+
+      - name: Write inplace tag: Default Worker
+        if: ${{ inputs.project_name }} == 'spazious-backend'
+        id: lookupSdkVersion
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq e -i '.image.tag = "${{ inputs.tag }}"' source/backend-default-worker/${{ inputs.env }}/specs.yaml
+
+      - name: Write inplace tag: Heavy Worker
+        if: ${{ inputs.project_name }} == 'spazious-backend'
+        id: lookupSdkVersion
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq e -i '.image.tag = "${{ inputs.tag }}"' source/backend-heavy-worker/${{ inputs.env }}/specs.yaml
+
+
       - name: Push file
         id: push
         uses: dmnemec/copy_file_to_another_repo_action@main
@@ -73,7 +95,7 @@ jobs:
 
       - name: Sync ArgoCD Application
         env:
-          APP_NAME: ${{ github.event.repository.name }}
+          APP_NAME: ${{ inputs.project_name }}
         run: |
           curl -k \
           -H "Authorization: Bearer $ARGOCD_TOKEN" \
@@ -83,7 +105,7 @@ jobs:
           https://$ARGOCD_SERVER/api/v1/applications/$APP_NAME/sync
 
       - name: Sync ArgoCD Beat Application
-        if: github.event.repository.name == 'spazious-backend'
+        if: ${{ inputs.project_name }} == 'spazious-backend'
         env:
           APP_NAME: backend-beat-worker
         run: |
@@ -95,7 +117,7 @@ jobs:
           https://$ARGOCD_SERVER/api/v1/applications/$APP_NAME/sync
 
       - name: Sync ArgoCD Default Worker Application
-        if: github.event.repository.name == 'spazious-backend'
+        if: ${{ inputs.project_name }} == 'spazious-backend'
         env:
           APP_NAME: backend-default-worker
         run: |
@@ -107,7 +129,7 @@ jobs:
           https://$ARGOCD_SERVER/api/v1/applications/$APP_NAME/sync
 
       - name: Sync ArgoCD Heavy Application
-        if: github.event.repository.name == 'spazious-backend'
+        if: ${{ inputs.project_name }} == 'spazious-backend'
         env:
           APP_NAME: backend-heavy-worker
         run: |
