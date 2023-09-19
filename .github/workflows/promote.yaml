@@ -33,28 +33,24 @@ jobs:
           path: source
 
       - name: Write inplace tag
-        id: lookupSdkVersion
         uses: mikefarah/yq@master
         with:
           cmd: yq e -i '.image.tag = "${{ inputs.tag }}"' source/${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
 
-      - name: Write inplace tag: Beat
+      - name: Write inplace tag Beat
         if: ${{ inputs.project_name }} == 'spazious-backend'
-        id: lookupSdkVersion
         uses: mikefarah/yq@master
         with:
           cmd: yq e -i '.image.tag = "${{ inputs.tag }}"' source/backend-beat-worker/${{ inputs.env }}/specs.yaml
 
-      - name: Write inplace tag: Default Worker
+      - name: Write inplace tag Default Worker
         if: ${{ inputs.project_name }} == 'spazious-backend'
-        id: lookupSdkVersion
         uses: mikefarah/yq@master
         with:
           cmd: yq e -i '.image.tag = "${{ inputs.tag }}"' source/backend-default-worker/${{ inputs.env }}/specs.yaml
 
-      - name: Write inplace tag: Heavy Worker
+      - name: Write inplace tag Heavy Worker
         if: ${{ inputs.project_name }} == 'spazious-backend'
-        id: lookupSdkVersion
         uses: mikefarah/yq@master
         with:
           cmd: yq e -i '.image.tag = "${{ inputs.tag }}"' source/backend-heavy-worker/${{ inputs.env }}/specs.yaml
