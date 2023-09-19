@@ -116,4 +116,4 @@ jobs:
           -H "Content-Type: application/json" \
           -X POST \
           -d '{"name":"APP_NAME"}' \
-          https://$ARGOCD_SERVER/api/v1/applications/$APP_NAME/sync
+          https://argocd.services.spazious.com/api/v1/applications/$APP_NAME/sync
