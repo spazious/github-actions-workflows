@@ -63,8 +63,8 @@ jobs:
           ARGOCD_TOKEN: ${{ secrets.ARGOCD_TOKEN }}
         run: |
           curl -k \
-          -H "Authorization: Bearer $ARGOCD_TOKEN" \
+          -H "Authorization: Bearer ${ARGOCD_TOKEN}" \
           -H "Content-Type: application/json" \
           -X POST \
-          -d '{"name":"APP_NAME"}' \
-          https://argocd.services.spazious.com/api/v1/applications/$APP_NAME/sync
+          -d '{"name":"${APP_NAME"}' \
+          https://argocd.services.spazious.com/api/v1/applications/${APP_NAME}/sync
