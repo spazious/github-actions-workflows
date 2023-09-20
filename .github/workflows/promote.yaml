@@ -52,19 +52,19 @@ jobs:
           commit_message: 'deployment from ${{ github.event.repository.name }}'
 
     
-#      - name: Setup Pritunl Profile and Start VPN Connection
-#        uses: nathanielvarona/pritunl-client-github-action@v1
-#        with:
-#          profile-file: ${{ secrets.PRITUNL_PROFILE_FILE }}
-#
-#      - name: Sync ArgoCD Application
-#        env:
-#          APP_NAME: ${{ inputs.project_name }}
-#          ARGOCD_TOKEN: ${{ secrets.ARGOCD_TOKEN }}
-#        run: |
-#          curl -k \
-#          -H "Authorization: Bearer ${ARGOCD_TOKEN}" \
-#          -H "Content-Type: application/json" \
-#          -X POST \
-#          -d '{"name":"${APP_NAME"}' \
-#          https://argocd.services.spazious.com/api/v1/applications/${APP_NAME}/sync
+      - name: Setup Pritunl Profile and Start VPN Connection
+        uses: nathanielvarona/pritunl-client-github-action@v1
+        with:
+          profile-file: ${{ secrets.PRITUNL_PROFILE_FILE }}
+
+      - name: Sync ArgoCD Application
+        env:
+          APP_NAME: ${{ inputs.project_name }}
+          ARGOCD_TOKEN: ${{ secrets.ARGOCD_TOKEN }}
+        run: |
+          curl -k \
+          -H "Authorization: Bearer ${ARGOCD_TOKEN}" \
+          -H "Content-Type: application/json" \
+          -X POST \
+          -d '{"name":"${APP_NAME"}' \
+          https://argocd.services.spazious.com/api/v1/applications/${APP_NAME}/sync
