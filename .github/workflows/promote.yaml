@@ -60,6 +60,7 @@ jobs:
       - name: Sync ArgoCD Application
         env:
           APP_NAME: ${{ inputs.project_name }}
+          ARGOCD_TOKEN: ${{ secrets.ARGOCD_TOKEN }}
         run: |
           curl -k \
           -H "Authorization: Bearer $ARGOCD_TOKEN" \
