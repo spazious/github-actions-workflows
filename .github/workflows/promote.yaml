@@ -25,11 +25,6 @@ jobs:
     outputs:
       noop: ${{ steps.noop.outputs.should_skip }}
     steps:
-      - name: Setup Pritunl Profile and Start VPN Connection
-        uses: nathanielvarona/pritunl-client-github-action@v1
-        with:
-          profile-file: ${{ secrets.PRITUNL_PROFILE_FILE }}
-
       - name: Checkout Helm Specs
         uses: actions/checkout@v3
         with:
@@ -55,15 +50,3 @@ jobs:
           user_name: '${{ github.event.repository.name }}'
           commit_message: 'deployment from ${{ github.event.repository.name }}'
 
-      - name: Sync ArgoCD Application
-        env:
-          APP_NAME: ${{ inputs.project_name }}
-          ENV: ${{ inputs.env }}
-          ARGOCD_TOKEN: ${{ secrets.ARGOCD_TOKEN }}
-        run: |
-            curl -k \
-            -H "Authorization: Bearer ${ARGOCD_TOKEN}" \
-            -H "Content-Type: application/json" \
-            -X POST \
-            -d '{"name":"${APP_NAME}-${ENV}"' \
-            https://argocd.services.spazious.com/api/v1/applications/${APP_NAME}-${ENV}/sync
