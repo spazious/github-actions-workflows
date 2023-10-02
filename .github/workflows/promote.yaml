@@ -61,7 +61,7 @@ jobs:
           ENV: ${{ inputs.env }}
           ARGOCD_TOKEN: ${{ secrets.ARGOCD_TOKEN }}
         run: |           
-            curl -k \ 
+            curl -k \
             -H "Authorization: Bearer ${ARGOCD_TOKEN}" \
             -H "Content-Type: application/json" \
             -X POST \
