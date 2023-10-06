@@ -48,7 +48,12 @@ jobs:
           uses: nathanielvarona/pritunl-client-github-action@v1.1.3
           with:
             profile-file: ${{ secrets.PRITUNL_PROFILE_FILE }}
+            start-connection: false
 
+        - name: Starting a VPN Connection Manually
+          run: |
+            pritunl-client start ${{ steps.pritunl-connection.outputs.client-id }}
+            
         - name: Get Global Secrets
           id: global-secrets
           uses: bjerkio/vault-action@v1.0.2
