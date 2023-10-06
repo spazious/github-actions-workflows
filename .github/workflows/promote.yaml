@@ -26,7 +26,7 @@ jobs:
       noop: ${{ steps.noop.outputs.should_skip }}
     steps:
       - name: Setup Pritunl Profile and Start VPN Connection
-        uses: nathanielvarona/pritunl-client-github-action@v1
+        uses: nathanielvarona/pritunl-client-github-action@v1.1.3
         with:
           profile-file: ${{ secrets.PRITUNL_PROFILE_FILE }}
           
