@@ -52,7 +52,7 @@ jobs:
         - name: Stop VPN Connection Manually
           if: ${{ always() }}
           run: |
-            kill -9 $(pgrep pritunl)
+            sudo kill -9 $(pgrep pritunl)
             
         - name: Get Global Secrets
           id: global-secrets
