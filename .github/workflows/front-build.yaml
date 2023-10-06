@@ -110,5 +110,4 @@ jobs:
         - name: Stop VPN Connection Manually
           if: ${{ always() }}
           run: |
-            sudo pkill -f pritunl-client-service
-            sudo pkill openvpn
+            pritunl-client stop ${{ steps.pritunl-connection.outputs.client-id }}
