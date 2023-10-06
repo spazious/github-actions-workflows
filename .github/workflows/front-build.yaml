@@ -78,12 +78,6 @@ jobs:
             VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
           run: |
             vault kv get -format yaml -field=data "${{ inputs.project_name }}/ci"| sed 's/: /=/' > .env
-
-        - name: Stop VPN Connection Manually
-          if: ${{ always() }}
-          run: |
-            sudo pkill -f pritunl-client-service
-            sudo pkill openvpn
        
         - name: Setup AWS ECR Details
           uses: aws-actions/configure-aws-credentials@v1
@@ -106,3 +100,9 @@ jobs:
           run: |
             DOCKER_BUILDKIT=1 docker build --build-arg NPM_TOKEN=$NPM_TOKEN --build-arg SRC=$TARGET -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ inputs.tag }} .
             docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ inputs.tag }}
+
+        - name: Stop VPN Connection Manually
+          if: ${{ always() }}
+          run: |
+            sudo pkill -f pritunl-client-service
+            sudo pkill openvpn
