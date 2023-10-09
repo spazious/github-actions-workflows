@@ -51,25 +51,22 @@ jobs:
           commit_message: 'deployment from ${{ github.event.repository.name }}'
 
       - name: Setup Pritunl Profile
-        id: pritunl-connection # A Setup Step ID has been added as a reference identifier for the output `client-id`.
-        uses: nathanielvarona/pritunl-client-github-action@v1
+        id: pritunl-connection
+        continue-on-error: true
+        uses: nathanielvarona/pritunl-client-github-action@v1.1.23
         with:
           profile-file: ${{ secrets.PRITUNL_PROFILE_FILE }}
-          start-connection: false # Do not establish a connection in this step.
       
-      - name: Starting a VPN Connection Manually
-        shell: bash
-        env:
-          PASSWORD: ${{ secrets.PRITUNL_PROFILE_FILE }}
-        run: |
-          MAX_TRIES=3
-          for i in $(seq 1 $MAX_TRIES); do
-            pritunl-client start ${{ steps.pritunl-connection.outputs.client-id }} \
-             --password ${PASSWORD} && break
-            sleep 15
-          done
+      - name: Setup Pritunl Profile
+        id: pritunl-connection-retry
+        if: steps.pritunl-connection.outcome == 'failure'
+        continue-on-error: true
+        uses: nathanielvarona/pritunl-client-github-action@v1.1.23
+        with:
+          profile-file: ${{ secrets.PRITUNL_PROFILE_FILE }}
      
       - name: Sync ArgoCD Application
+        continue-on-error: true
         env:
           APP_NAME: ${{ inputs.project_name }}
           ENV: ${{ inputs.env }}
