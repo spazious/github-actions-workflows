@@ -24,12 +24,7 @@ jobs:
     runs-on: ubuntu-22.04
     outputs:
       noop: ${{ steps.noop.outputs.should_skip }}
-    steps:
-      - name: Setup Pritunl Profile and Start VPN Connection
-        uses: nathanielvarona/pritunl-client-github-action@v1.1.3
-        with:
-          profile-file: ${{ secrets.PRITUNL_PROFILE_FILE }}
-          
+    steps:        
       - name: Checkout Helm Specs
         uses: actions/checkout@v3
         with:
@@ -54,6 +49,12 @@ jobs:
           user_email: '${{ github.event.repository.name }}@spazious.rocks'
           user_name: '${{ github.event.repository.name }}'
           commit_message: 'deployment from ${{ github.event.repository.name }}'
+
+      - uses: Wandalen/wretry.action@master
+        with:
+          action: nathanielvarona/pritunl-client-github-action@v1.1.3
+          with: |
+            profile-file: ${{ secrets.PRITUNL_PROFILE_FILE }} 
 
       - name: Sync ArgoCD Application
         env:
