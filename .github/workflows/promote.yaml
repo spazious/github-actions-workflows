@@ -59,11 +59,13 @@ jobs:
       
       - name: Starting a VPN Connection Manually
         shell: bash
+        env:
+          PASSWORD: ${{ secrets.PRITUNL_PROFILE_FILE }}
         run: |
           MAX_TRIES=3
           for i in $(seq 1 $MAX_TRIES); do
             pritunl-client start ${{ steps.pritunl-connection.outputs.client-id }} \
-             --password ${{ secrets.PRITUNL_PROFILE_PIN }} && break
+             --password ${PASSWORD} && break
             sleep 15
           done
      
