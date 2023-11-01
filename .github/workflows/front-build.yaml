@@ -18,6 +18,10 @@ on:
         required: true
         default: 'stg'
         type: string
+      SPZ_HISTORY_WIF:
+        required: false
+        default: 'none'
+        type: string
     secrets:
       GH_PAT:
         required: true
@@ -96,7 +100,8 @@ jobs:
             ECR_REPOSITORY: ${{secrets.AWS_ECR_REPO}}
             TARGET: ${{ inputs.mode }}
             ENVIRONMENT: ${{ inputs.environment}}
-            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}  
+            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+            SPZ_HISTORY_WIF: ${{ inputs.SPZ_HISTORY_WIF }}
           run: |
-            DOCKER_BUILDKIT=1 docker build --build-arg NPM_TOKEN=$NPM_TOKEN --build-arg SRC=$TARGET -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ inputs.tag }} .
+            DOCKER_BUILDKIT=1 docker build --build-arg SPZ_HISTORY_WIF=$SPZ_HISTORY_WIF --build-arg NPM_TOKEN=$NPM_TOKEN --build-arg SRC=$TARGET -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ inputs.tag }} .
             docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ inputs.tag }}
