@@ -80,7 +80,15 @@ jobs:
             VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
           run: |
             vault kv get -format yaml -field=data "${{ inputs.project_name }}/ci"| sed 's/: /=/' > .env
-       
+  
+        - uses: mskelton/setup-yarn@v1
+          with:
+            node-version: '18.x'
+
+        - name: Securirity Scan
+          continue-on-error: true
+          run: yarn audit          
+        
         - name: Setup AWS ECR Details
           uses: aws-actions/configure-aws-credentials@v1
           with:
