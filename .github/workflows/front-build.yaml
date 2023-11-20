@@ -82,6 +82,8 @@ jobs:
             vault kv get -format yaml -field=data "${{ inputs.project_name }}/ci"| sed 's/: /=/' > .env
   
         - uses: mskelton/setup-yarn@v1
+          env:
+            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           with:
             node-version: '18.x'
 
