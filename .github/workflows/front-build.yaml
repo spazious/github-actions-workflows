@@ -74,12 +74,6 @@ jobs:
           with:
             version: '~1.9.2'
 
-        - name: Create .env
-          env:
-            VAULT_ADDR: "https://vault.services.spazious.com"
-            VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
-          run: |
-            vault kv get -format yaml -field=data "${{ inputs.project_name }}/ci"| sed 's/: /=/' > .env
   
         - uses: mskelton/setup-yarn@v1
           env:
@@ -88,8 +82,17 @@ jobs:
             node-version: '18.x'
 
         - name: Securirity Scan
+          env:
+            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           continue-on-error: true
-          run: yarn audit          
+          run: yarn audit
+          
+        - name: Create .env
+          env:
+            VAULT_ADDR: "https://vault.services.spazious.com"
+            VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+          run: |
+            vault kv get -format yaml -field=data "${{ inputs.project_name }}/ci"| sed 's/: /=/' > .env
         
         - name: Setup AWS ECR Details
           uses: aws-actions/configure-aws-credentials@v1
