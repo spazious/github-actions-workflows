@@ -28,12 +28,18 @@ on:
       PRITUNL_PROFILE_FILE:
         required: true
       AWS_ACCESS_KEY_ID:
-        required: true
+        required: false
       AWS_SECRET_ACCESS_KEY:
-        required: true
-      AWS_REGION:
-        required: true
+        required: false
       AWS_ECR_REPO:
+        required: false
+      AWS_ACCESS_KEY_ID_PRD:
+        required: false
+      AWS_SECRET_ACCESS_KEY_PRD:
+        required: false
+      AWS_ECR_REPO_PRD:
+        required: false
+      AWS_REGION:
         required: true
       SPZ_HISTORY_WIF:
         required: false
