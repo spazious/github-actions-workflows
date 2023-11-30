@@ -71,7 +71,7 @@ jobs:
           uses: bjerkio/vault-action@v1.0.2
           with:
             endpoint: "https://vault.services.spazious.com"
-            path: "ci/${{ inputs.project_name }}/${{ inputs.environment }}/"
+            path: "${{ inputs.project_name }}/${{ inputs.environment }}/"
             authMethod: token
             token: ${{ secrets.VAULT_TOKEN }}
           
@@ -98,7 +98,7 @@ jobs:
             VAULT_ADDR: "https://vault.services.spazious.com"
             VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
           run: |
-            vault kv get -format yaml -field=data "${{ inputs.project_name }}/ci"| sed 's/: /=/' > .env
+            vault kv get -format yaml -field=data "ci/${{ inputs.project_name }}/${{ inputs.environment }}"| sed 's/: /=/' > .env
         
         - name: Setup AWS ECR Details STG
           if: "${{ inputs.environment == 'stg' }}"
