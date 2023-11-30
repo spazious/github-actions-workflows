@@ -91,7 +91,7 @@ jobs:
             vault kv get -format yaml -field=data "ci/${{ inputs.project_name }}/${{ inputs.environment }}"| sed 's/: /=/' > .env
         
         - name: Setup AWS ECR Details STG
-          if: "${{ inputs.environment == 'stg' }}"
+          if: "${{ inputs.environment == 'stg' || inputs.environment == 'v3' }}"
           uses: aws-actions/configure-aws-credentials@v1
           with:
             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
