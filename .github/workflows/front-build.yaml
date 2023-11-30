@@ -71,7 +71,7 @@ jobs:
           uses: bjerkio/vault-action@v1.0.2
           with:
             endpoint: "https://vault.services.spazious.com"
-            path: "${{ inputs.project_name }}/ci"
+            path: "ci/${{ inputs.project_name }}/${{ inputs.environment }}/"
             authMethod: token
             token: ${{ secrets.VAULT_TOKEN }}
           
