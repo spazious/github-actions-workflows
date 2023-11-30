@@ -65,21 +65,6 @@ jobs:
             path: "ci/global"
             authMethod: token
             token: ${{ secrets.VAULT_TOKEN }}
-
-        - name: Get Service Secrets
-          id: service-secrets
-          uses: bjerkio/vault-action@v1.0.2
-          with:
-            endpoint: "https://vault.services.spazious.com"
-            path: "${{ inputs.project_name }}/${{ inputs.environment }}/"
-            authMethod: token
-            token: ${{ secrets.VAULT_TOKEN }}
-          
-        - name: Setup Vault Cli
-          uses: eLco/setup-vault@v1
-          with:
-            version: '~1.9.2'
-
   
         - uses: mskelton/setup-yarn@v1
           env:
@@ -92,6 +77,11 @@ jobs:
             NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           continue-on-error: true
           run: yarn audit
+            
+        - name: Setup Vault Cli
+          uses: eLco/setup-vault@v1
+          with:
+            version: '~1.9.2'
           
         - name: Create .env
           env:
