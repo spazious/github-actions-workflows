@@ -99,7 +99,7 @@ jobs:
             aws-region: ${{secrets.AWS_REGION}}
   
         - name: Setup AWS ECR Details PRD
-          if: "${{ inputs.environment == 'prd' }}"
+          if: "${{ inputs.environment == 'prd' || inputs.environment == 'v3-prd' }}"
           uses: aws-actions/configure-aws-credentials@v1
           with:
             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PRD }}
