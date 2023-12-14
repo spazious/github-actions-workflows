@@ -120,5 +120,5 @@ jobs:
             SPZ_APP_NEW_BOOKING_HOTEL_CHAINS: booking
             # SPZ_APP_3D_PREFIX: "${{ inputs.environment }}".
           run: |
-            DOCKER_BUILDKIT=1 docker build -f ${{ inputs.dockerfile }}--build-arg SPZ_APP_NEW_BOOKING_HOTEL_CHAINS=$SPZ_APP_NEW_BOOKING_HOTEL_CHAINS --build-arg SPZ_APP_3D_PREFIX=${{ inputs.environment }}. --build-arg REACT_APP_API=$REACT_APP_API --build-arg SPZ_HISTORY_WIF=$SPZ_HISTORY_WIF --build-arg NPM_TOKEN=$NPM_TOKEN --build-arg SRC=$TARGET -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ inputs.tag }} .
+            DOCKER_BUILDKIT=1 docker build -f ${{ inputs.dockerfile }} --build-arg SPZ_APP_NEW_BOOKING_HOTEL_CHAINS=$SPZ_APP_NEW_BOOKING_HOTEL_CHAINS --build-arg SPZ_APP_3D_PREFIX=${{ inputs.environment }}. --build-arg REACT_APP_API=$REACT_APP_API --build-arg SPZ_HISTORY_WIF=$SPZ_HISTORY_WIF --build-arg NPM_TOKEN=$NPM_TOKEN --build-arg SRC=$TARGET -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ inputs.tag }} .
             docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ inputs.tag }}
