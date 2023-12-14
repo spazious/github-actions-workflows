@@ -20,6 +20,7 @@ on:
         type: string
       dockerfile:
         required: false
+        type: string
         default: "Dockerfile"
     secrets:
       GH_PAT:
