@@ -63,21 +63,6 @@ jobs:
             path: "ci/global"
             authMethod: token
             token: ${{ secrets.VAULT_TOKEN }}
-
-        - name: Get Service Secrets
-          id: service-secrets
-          uses: bjerkio/vault-action@v1.0.2
-          with:
-            endpoint: "https://vault.services.spazious.com"
-            path: "${{ inputs.project_name }}/ci"
-            authMethod: token
-            token: ${{ secrets.VAULT_TOKEN }}
-          
-        - name: Setup Vault Cli
-          uses: eLco/setup-vault@v1
-          with:
-            version: '~1.9.2'
-
   
         - uses: mskelton/setup-yarn@v1
           env:
@@ -90,16 +75,21 @@ jobs:
             NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           continue-on-error: true
           run: yarn audit
+
+        - name: Setup Vault Cli
+          uses: eLco/setup-vault@v1
+          with:
+            version: '~1.9.2'
           
         - name: Create .env
           env:
             VAULT_ADDR: "https://vault.services.spazious.com"
             VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
           run: |
-            vault kv get -format yaml -field=data "${{ inputs.project_name }}/ci"| sed 's/: /=/' > .env
+            vault kv get -format yaml -field=data "ci/${{ inputs.project_name }}/${{ inputs.environment }}"| sed 's/: /=/' > .env
         
         - name: Setup AWS ECR Details STG
-          if: "${{ inputs.environment == 'stg' }}"
+          if: "${{ inputs.environment == 'stg' || inputs.environment == 'v3'  }}"
           uses: aws-actions/configure-aws-credentials@v1
           with:
             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -107,7 +97,7 @@ jobs:
             aws-region: ${{secrets.AWS_REGION}}
   
         - name: Setup AWS ECR Details PRD
-          if: "${{ inputs.environment == 'prd' }}"
+          if: "${{ inputs.environment == 'prd' || inputs.environment == 'v3-prd' }}"
           uses: aws-actions/configure-aws-credentials@v1
           with:
             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PRD }}
