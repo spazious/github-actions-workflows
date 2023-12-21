@@ -23,6 +23,10 @@ on:
         type: string
         default: "Dockerfile"
     secrets:
+      GOOGLE_CREDENTIALS:
+        required: false
+      GCR_REGISTRY:
+        required: false
       GH_PAT:
         required: true
       VAULT_TOKEN:
@@ -95,6 +99,8 @@ jobs:
             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: ${{secrets.AWS_REGION}}
+      
+
   
         - name: Setup AWS ECR Details PRD
           if: "${{ inputs.environment == 'prd' || inputs.environment == 'v3-prd' }}"
@@ -117,7 +123,9 @@ jobs:
             SPZ_HISTORY_WIF: ${{ secrets.SPZ_HISTORY_WIF }}
             REACT_APP_API: https://api."${{ inputs.environment }}".services.spazious.com/api/v2/
             SPZ_APP_NEW_BOOKING_HOTEL_CHAINS: booking
-            # SPZ_APP_3D_PREFIX: "${{ inputs.environment }}".
           run: |
             DOCKER_BUILDKIT=1 docker build -f ${{ inputs.dockerfile }} --build-arg SPZ_APP_NEW_BOOKING_HOTEL_CHAINS=$SPZ_APP_NEW_BOOKING_HOTEL_CHAINS --build-arg SPZ_APP_3D_PREFIX=${{ inputs.environment }}. --build-arg REACT_APP_API=$REACT_APP_API --build-arg SPZ_HISTORY_WIF=$SPZ_HISTORY_WIF --build-arg NPM_TOKEN=$NPM_TOKEN --build-arg SRC=$TARGET -t $ECR_REGISTRY/${{ inputs.project_name }}:${{ inputs.tag }} .
             docker push $ECR_REGISTRY/${{ inputs.project_name }}:${{ inputs.tag }}
+            docker login -u _json_key --password ${{ secrets.GOOGLE_CREDENTIALS }} https://gcr.io
+            docker tag $ECR_REGISTRY/${{ inputs.project_name }}:${{ inputs.tag }} ${{ secrets.GCR_REGISTRY }}/${{ inputs.project_name }}:${{ inputs.tag }}
+            docker push ${{ secrets.GCR_REGISTRY }}/${{ inputs.project_name }}:${{ inputs.tag }}
