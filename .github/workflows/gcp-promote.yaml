@@ -1,0 +1,80 @@
+name: promote
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+      env:
+        required: true
+        type: string
+      project_name:
+        required: true
+        type: string
+    secrets:
+      GH_PAT:
+        required: true
+      ARGOCD_TOKEN:
+        required: false
+      PRITUNL_PROFILE_FILE:
+        required: false
+jobs:
+  check-envs:
+    runs-on: ubuntu-22.04
+    outputs:
+      noop: ${{ steps.noop.outputs.should_skip }}
+    steps:        
+      - name: Checkout Helm Specs
+        uses: actions/checkout@v3
+        with:
+          repository: spazious/helm-specs
+          token: ${{ secrets.GH_PAT }} 
+          path: source
+
+      - name: Write inplace tag
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq e -i '.image.tag = "${{ inputs.tag }}"' source/${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
+
+      - name: Push file
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.GH_PAT }}
+        with:
+          source_file: source/${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
+          destination_repo: 'spazious/helm-specs'
+          destination_folder: '${{ inputs.project_name }}/${{ inputs.env }}/'
+          destination_branch: feature/gcp
+          user_email: '${{ github.event.repository.name }}@spazious.rocks'
+          user_name: '${{ github.event.repository.name }}'
+          commit_message: 'deployment from ${{ github.event.repository.name }}'
+
+      - name: Setup Pritunl Profile
+        id: pritunl-connection
+        continue-on-error: true
+        uses: nathanielvarona/pritunl-client-github-action@v1.1.3
+        with:
+          profile-file: ${{ secrets.PRITUNL_PROFILE_FILE }}
+      
+      - name: Setup Pritunl Profile
+        id: pritunl-connection-retry
+        if: steps.pritunl-connection.outcome == 'failure'
+        continue-on-error: true
+        uses: nathanielvarona/pritunl-client-github-action@v1.1.3
+        with:
+          profile-file: ${{ secrets.PRITUNL_PROFILE_FILE }}
+     
+      - name: Sync ArgoCD Application
+        continue-on-error: true
+        env:
+          APP_NAME: ${{ inputs.project_name }}
+          ENV: ${{ inputs.env }}
+          ARGOCD_TOKEN: ${{ secrets.ARGOCD_TOKEN }}
+        run: |           
+            curl -k \
+            -H "Authorization: Bearer ${ARGOCD_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -X POST \
+            -d "{\"name\":\"${APP_NAME}-${ENV}\"}" \
+            https://argocd.services.spazious.com/api/v1/applications/${APP_NAME}-${ENV}/sync
