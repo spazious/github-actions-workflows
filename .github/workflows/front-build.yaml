@@ -38,11 +38,11 @@ on:
       AWS_ECR_REPO:
         required: true
       AWS_ACCESS_KEY_ID_PRD:
-        required: true
+        required: false
       AWS_SECRET_ACCESS_KEY_PRD:
-        required: true
+        required: false
       AWS_ECR_REPO_PRD:
-        required: true
+        required: false
       AWS_REGION:
         required: true
       SPZ_HISTORY_WIF:
