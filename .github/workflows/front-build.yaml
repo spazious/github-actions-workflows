@@ -35,9 +35,15 @@ on:
         required: true
       AWS_SECRET_ACCESS_KEY:
         required: true
-      AWS_REGION:
-        required: true
       AWS_ECR_REPO:
+        required: true
+      AWS_ACCESS_KEY_ID_PRD:
+        required: true
+      AWS_SECRET_ACCESS_KEY_PRD:
+        required: true
+      AWS_ECR_REPO_PRD:
+        required: true
+      AWS_REGION:
         required: true
       SPZ_HISTORY_WIF:
         required: false
