@@ -85,7 +85,7 @@ jobs:
             vault kv get -format yaml -field=data "ci/${{ inputs.project_name }}/${{ inputs.environment }}"| sed 's/: /=/' > .env
   
         - name: Build and push Docker image
-          uses: docker/build-push-action@v5
+          uses: docker/build-push-action@v1
           with:
             dockerfile: ${{ inputs.dockerfile }}
             username: _json_key
