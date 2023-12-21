@@ -35,8 +35,6 @@ on:
         required: true
       PRITUNL_PROFILE_FILE:
         required: true
-      AWS_REGION:
-        required: true
       SPZ_HISTORY_WIF:
         required: false
 jobs:
