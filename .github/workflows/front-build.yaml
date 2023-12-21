@@ -1,4 +1,4 @@
-name: Docker Build and Push
+name: GCP Build
 on:
   workflow_call:
     inputs:
