@@ -98,6 +98,7 @@ jobs:
         - name: Build and push Docker image
           uses: docker/build-push-action@v5
           with:
+            push: true
             file: ${{ inputs.dockerfile }}
             tags: gcr.io/prj-management/${{ inputs.project_name }}:${{ inputs.tag }}
             build-args: SPZ_APP_NEW_BOOKING_HOTEL_CHAINS=booking,SPZ_APP_3D_PREFIX=${{ inputs.environment }}.,REACT_APP_API="https://api.'${{ inputs.environment }}'.services.spazious.com/api/v2/",SPZ_HISTORY_WIF=${{ secrets.SPZ_HISTORY_WIF }},NPM_TOKEN=${{ secrets.NPM_TOKEN }},SRC=${{ inputs.mode }}
