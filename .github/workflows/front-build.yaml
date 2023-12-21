@@ -35,20 +35,8 @@ on:
         required: true
       PRITUNL_PROFILE_FILE:
         required: true
-      AWS_ACCESS_KEY_ID:
-        required: true
-      AWS_SECRET_ACCESS_KEY:
-        required: true
-      AWS_ACCESS_KEY_ID_PRD:
-        required: false
-      AWS_SECRET_ACCESS_KEY_PRD:
-        required: false
       AWS_REGION:
         required: true
-      AWS_ECR_REPO:
-        required: true
-      AWS_ECR_REPO_PRD:
-        required: false
       SPZ_HISTORY_WIF:
         required: false
 jobs:
@@ -135,3 +123,20 @@ jobs:
             docker login -u _json_key --password ${{ secrets.GOOGLE_CREDENTIALS }} https://gcr.io
             docker tag $ECR_REGISTRY/${{ inputs.project_name }}:${{ inputs.tag }} ${{ secrets.GCR_REGISTRY }}/${{ inputs.project_name }}:${{ inputs.tag }}
             docker push ${{ secrets.GCR_REGISTRY }}/${{ inputs.project_name }}:${{ inputs.tag }}
+
+        - name: Build and push Docker image
+          uses: docker/buildx-push-action@v3
+          with:
+            dockerfile: ${{ inputs.dockerfile }}
+            username: _json_key
+            password: ${{ secrets.PRD_DOCKER_PASSWORD }}
+            registry: gcr.io
+            repository: ${{ steps.config.outputs.project }}/${{ github.event.repository.name }}-bc-${{ steps.config.outputs.bc_name}}
+            tags: ${{ steps.config.outputs.tag }}
+            build-args:
+              - SPZ_APP_NEW_BOOKING_HOTEL_CHAINS: booking
+              - SPZ_APP_3D_PREFIX: ${{ inputs.environment }}.
+              - REACT_APP_API: "https://api.'${{ inputs.environment }}'.services.spazious.com/api/v2/"
+              - SPZ_HISTORY_WIF: ${{ secrets.SPZ_HISTORY_WIF }}
+              - NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+              - SRC: ${{ inputs.mode }}
