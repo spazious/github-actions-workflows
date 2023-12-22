@@ -64,28 +64,28 @@ jobs:
             authMethod: token
             token: ${{ secrets.VAULT_TOKEN }}
       
-        - uses: healthplace/npmrc-registry-login-action@v1.0
-          with:
-            scope: '@spazious'
-            registry: "https://nexus.services.spazious.com/repository/spazious-npm/"
-            auth-token: ''
+        # - uses: healthplace/npmrc-registry-login-action@v1.0
+        #   with:
+        #     scope: '@spazious'
+        #     registry: "https://nexus.services.spazious.com/repository/spazious-npm/"
+        #     auth-token: ''
   
-        - uses: mskelton/setup-yarn@v1
-          env:
-            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          with:
-            node-version: '18.x'
+        # - uses: mskelton/setup-yarn@v1
+        #   env:
+        #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        #   with:
+        #     node-version: '18.x'
 
-        - name: Securirity Scan
-          env:
-            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          continue-on-error: true
-          run: yarn audit
+        # - name: Securirity Scan
+        #   env:
+        #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        #   continue-on-error: true
+        #   run: yarn audit
 
-        - name: Setup Vault Cli
-          uses: eLco/setup-vault@v1
-          with:
-            version: '~1.9.2'
+        # - name: Setup Vault Cli
+        #   uses: eLco/setup-vault@v1
+        #   with:
+        #     version: '~1.9.2'
           
         - name: Create .env
           env:
