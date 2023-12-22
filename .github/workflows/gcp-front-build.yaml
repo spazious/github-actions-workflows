@@ -22,6 +22,10 @@ on:
         required: false
         type: string
         default: "Dockerfile"
+      no-cache:
+        required: false
+        type: string
+        default: "false"
     secrets:
       GOOGLE_CREDENTIALS:
         required: false
@@ -104,3 +108,4 @@ jobs:
             build-args: SPZ_APP_NEW_BOOKING_HOTEL_CHAINS=booking,SPZ_APP_3D_PREFIX=${{ inputs.environment }}.,REACT_APP_API="https://api.'${{ inputs.environment }}'.spazious.com/api/v2/",SPZ_HISTORY_WIF=${{ secrets.SPZ_HISTORY_WIF }},NPM_TOKEN=${{ secrets.NPM_TOKEN }},SRC=${{ inputs.mode }}
             cache-from: type=gha
             cache-to: type=gha,mode=max
+            no-cache:  ${{ inputs.cache }}
