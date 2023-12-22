@@ -67,7 +67,7 @@ jobs:
         - uses: healthplace/npmrc-registry-login-action@v1.0
           with:
             scope: '@spazious'
-            registry: https://nexus.services.spazious.com/repository/spazious-npm/
+            registry: "https://nexus.services.spazious.com/repository/spazious-npm/"
             auth-token: ''
   
         - uses: mskelton/setup-yarn@v1
