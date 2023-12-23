@@ -45,7 +45,7 @@ jobs:
           source_file: source/${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
           destination_repo: 'spazious/helm-specs'
           destination_folder: '${{ inputs.project_name }}/${{ inputs.env }}/'
-          destination_branch: feature/gcp
+          destination_branch: master
           user_email: '${{ github.event.repository.name }}@spazious.rocks'
           user_name: '${{ github.event.repository.name }}'
           commit_message: 'deployment from ${{ github.event.repository.name }}'
