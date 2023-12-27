@@ -93,8 +93,12 @@ jobs:
             VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
           run: |
             vault kv get -format yaml -field=data "ci/${{ inputs.project_name }}/${{ inputs.environment }}"| sed 's/: /=/' > .env
-        
-        
+      
+        - name: cat env
+          run: |
+            cat .env 
+
+
         - name: Set up Docker Buildx
           uses: docker/setup-buildx-action@v3
 
