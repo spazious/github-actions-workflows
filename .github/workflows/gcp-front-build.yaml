@@ -101,10 +101,14 @@ jobs:
             username: _json_key
             password: ${{ secrets.GOOGLE_CREDENTIALS }}
   
-        - name: Build and push Docker image
-          uses: docker/build-push-action@v5
-          with:
-            push: true
-            secrets-files: id=env,src=.env
-            file: ${{ inputs.dockerfile }}
-            tags: gcr.io/prj-management-407914/${{ inputs.project_name }}:${{ inputs.tag }}
+        - name: Build and push the tagged docker image to Amazon ECR
+          env:
+            TARGET: ${{ inputs.mode }}
+            ENVIRONMENT: ${{ inputs.environment}}
+            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+            SPZ_HISTORY_WIF: ${{ secrets.SPZ_HISTORY_WIF }}
+            REACT_APP_API: https://api."${{ inputs.environment }}".services.spazious.com/api/v2/
+            SPZ_APP_NEW_BOOKING_HOTEL_CHAINS: booking
+          run: |
+              DOCKER_BUILDKIT=1 docker build -f ${{ inputs.dockerfile }} --build-arg SPZ_APP_NEW_BOOKING_HOTEL_CHAINS=$SPZ_APP_NEW_BOOKING_HOTEL_CHAINS --build-arg SPZ_APP_3D_PREFIX=${{ inputs.environment }}. --build-arg REACT_APP_API=$REACT_APP_API --build-arg SPZ_HISTORY_WIF=$SPZ_HISTORY_WIF --build-arg NPM_TOKEN=$NPM_TOKEN --build-arg SRC=$TARGET -t gcr.io/prj-management-407914/${{ inputs.project_name }}:${{ inputs.tag }} .
+              docker push gcr.io/prj-management-407914/${{ inputs.project_name }}:${{ inputs.tag }}
