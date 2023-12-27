@@ -82,10 +82,10 @@ jobs:
         #   continue-on-error: true
         #   run: yarn audit
 
-        # - name: Setup Vault Cli
-        #   uses: eLco/setup-vault@v1
-        #   with:
-        #     version: '~1.9.2'
+        - name: Setup Vault Cli
+          uses: eLco/setup-vault@v1
+          with:
+             version: '~1.9.2'
           
         - name: Create .env
           env:
