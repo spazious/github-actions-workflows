@@ -106,5 +106,7 @@ jobs:
             TARGET: ${{ inputs.mode }}
             ENVIRONMENT: ${{ inputs.environment}}
           run: |
+              cat .env 
+              cat .env > $GITHUB_ENV
               DOCKER_BUILDKIT=1 docker build -f ${{ inputs.dockerfile }}  --build-arg SRC=$TARGET -t gcr.io/prj-management-407914/${{ inputs.project_name }}:${{ inputs.tag }} .
               docker push gcr.io/prj-management-407914/${{ inputs.project_name }}:${{ inputs.tag }}
