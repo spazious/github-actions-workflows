@@ -35,7 +35,7 @@ jobs:
       - name: Write inplace tag
         uses: mikefarah/yq@master
         with:
-          cmd: yq e -i '.image.tag = "${{ inputs.tag }}"' source/${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
+          cmd: yq e -i '.image.tag = "${{ inputs.env }}-${{ inputs.tag }}"' source/${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
 
       - name: Push file
         uses: dmnemec/copy_file_to_another_repo_action@main
