@@ -120,5 +120,5 @@ jobs:
               while IFS='=' read -r key value; do
                 args+=(--build-arg "$key=$value")
               done < <(cat .env <(printenv | grep SPZ_))
-              DOCKER_BUILDKIT=1 docker build -f ${{ inputs.dockerfile }} "${args[@]}" --build-arg SRC=$TARGET -t gcr.io/prj-management-407914/${{ inputs.project_name }}:${{ inputs.tag }} .
-              docker push gcr.io/prj-management-407914/${{ inputs.project_name }}:${{ inputs.tag }}
+              DOCKER_BUILDKIT=1 docker build -f ${{ inputs.dockerfile }} "${args[@]}" --build-arg SRC=$TARGET -t gcr.io/prj-management-407914/${{ inputs.project_name }}:${{ inputs.environment}}-${{ inputs.tag }} .
+              docker push gcr.io/prj-management-407914/${{ inputs.project_name }}:${{ inputs.environment}}-${{ inputs.tag }}
