@@ -108,7 +108,7 @@ jobs:
             username: _json_key
             password: ${{ secrets.GOOGLE_CREDENTIALS }}
   
-        - name: Build and push the tagged docker image to Amazon ECR
+        - name: Build and push the tagged docker image
           env:
             TARGET: ${{ inputs.mode }}
             ENVIRONMENT: ${{ inputs.environment}}
@@ -120,5 +120,5 @@ jobs:
               while IFS='=' read -r key value; do
                 args+=(--build-arg "$key=$value")
               done < <(cat .env <(printenv | grep SPZ_))
-              DOCKER_BUILDKIT=1 docker build -f ${{ inputs.dockerfile }} "${args[@]}" --build-arg SRC=$TARGET -t gcr.io/prj-management-407914/${{ inputs.project_name }}:${{ inputs.environment}}-${{ inputs.tag }} .
+              DOCKER_BUILDKIT=1 docker build -f ${{ inputs.dockerfile }} "${args[@]}" --build-arg SRC=$TARGET -t gcr.io/prj-management-407914/${{ inputs.project_name }}:${{ inputs.environment}}-${{ inputs.tag }}-${{ github.run_attempt }} .
               docker push gcr.io/prj-management-407914/${{ inputs.project_name }}:${{ inputs.environment}}-${{ inputs.tag }}-${{ github.run_attempt }}
