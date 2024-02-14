@@ -35,7 +35,7 @@ jobs:
       - name: Write inplace tag
         uses: mikefarah/yq@master
         with:
-          cmd: yq e -i '.image.tag = "${{ inputs.env }}-${{ inputs.tag }}"' source/${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
+          cmd: yq e -i '.image.tag = "${{ inputs.environment}}-${{ github.run_number }}-${{ github.run_attempt }}-${{ inputs.tag }}"' source/${{ inputs.project_name }}/${{ inputs.env }}/specs.yaml
 
       - name: Push file
         id: push
