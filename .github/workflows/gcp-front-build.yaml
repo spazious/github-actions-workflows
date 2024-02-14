@@ -110,7 +110,7 @@ jobs:
   
         - name: Build and push the tagged docker image
           env:
-            DOCKER_TAG:  ${{ inputs.environment}}-${{ github.run_number }}-${{ inputs.tag }}
+            DOCKER_TAG: ${{ inputs.environment}}-${{ github.run_number }}-${{ github.run_attempt }}-${{ inputs.tag }}
             TARGET: ${{ inputs.mode }}
             ENVIRONMENT: ${{ inputs.environment}}
             NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
