@@ -54,7 +54,10 @@ jobs:
           id: short-sha
           with:
             length: 7
-
+        - name: test ip
+          run: |
+            curl http://httpbin.org/ip
+          
         - name: Get Global Secrets
           id: global-secrets
           uses: bjerkio/vault-action@v1.0.2
