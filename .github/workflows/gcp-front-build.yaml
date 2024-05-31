@@ -116,6 +116,7 @@ jobs:
             NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
             SPZ_APP_SHORT_ID: ${{ steps.short-sha.outputs.sha }}
             SPZ_APP_BUILD_ID: ${{ github.run_number }}
+            SPZ_APP_ENVIRONMENT: ${{ inputs.environment }}
           run: |
               args=()
               while IFS='=' read -r key value; do
