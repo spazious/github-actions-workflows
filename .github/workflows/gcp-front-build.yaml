@@ -27,9 +27,6 @@ on:
         type: string
         default: "false"
     secrets:
-      SPZ_GCP_CREDENTIALS:
-        required: true
-      # Deprecated credentials below
       GOOGLE_CREDENTIALS:
         required: false
       GCR_REGISTRY:
@@ -58,24 +55,6 @@ jobs:
           with:
             length: 7
 
-        - name: Authenticate to Google Cloud
-          uses: google-github-actions/auth@v2
-          with:
-            credentials_json: '${{ secrets.SPZ_GCP_CREDENTIALS }}'
-
-        - name: Set up Google Cloud SDK
-          uses: google-github-actions/setup-gcloud@v2
-
-        - name: Create credentials file
-          run: echo "${{ secrets.SPZ_GCP_CREDENTIALS }}" > ${HOME}/gcp-key.json
-
-        - name: Get Identity Token
-          id: get-identity-token
-          run: |
-            gcloud auth activate-service-account --key-file="${HOME}/gcp-key.json"
-            ACCESS_TOKEN=$(gcloud auth print-identity-token --audiences=194968224071-u53i1ir4n24q7ct192btlrqat31l7e1q.apps.googleusercontent.com --include-email)
-            echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
-
         - name: Get Global Secrets
           id: global-secrets
           uses: bjerkio/vault-action@v1.0.2
@@ -84,14 +63,13 @@ jobs:
             path: "ci/global"
             authMethod: token
             token: ${{ secrets.VAULT_TOKEN }}
-            headers: '{"Authorization": "Bearer ${{ env.ACCESS_TOKEN }}"}'
-      
+
         # - uses: healthplace/npmrc-registry-login-action@v1.0
         #   with:
         #     scope: '@spazious'
         #     registry: "https://nexus.services.spazious.com/repository/spazious-npm/"
         #     auth-token: ''
-  
+
         # - uses: mskelton/setup-yarn@v1
         #   env:
         #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -109,21 +87,21 @@ jobs:
           with:
             # https://github.com/eLco/setup-vault/tree/v1/?tab=readme-ov-file#inputs
             vault_version: '~1.9.2'
-          
+
         - name: Create .env
           env:
-            VAULT_ADDR: "https://vault.management.spazious.com"
+            VAULT_ADDR: "https://vault.services.spazious.com"
             VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
           run: |
             vault kv get -format yaml -field=data "ci/${{ inputs.project_name }}/${{ inputs.environment }}"| sed 's/: /=/' > .env
-      
+
         - name: Login to Docker Hub
           uses: docker/login-action@v3
           with:
             registry: gcr.io
             username: _json_key
             password: ${{ secrets.GOOGLE_CREDENTIALS }}
-  
+
         - name: Build and push the tagged docker image
           env:
             DOCKER_TAG: ${{ inputs.environment}}-${{ github.run_number }}-${{ github.run_attempt }}-${{ inputs.tag }}
