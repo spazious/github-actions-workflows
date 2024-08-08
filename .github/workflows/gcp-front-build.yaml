@@ -57,11 +57,22 @@ jobs:
           id: short-sha
           with:
             length: 7
-        - uses: google-github-actions/auth@v2
+
+        - name: Authenticate to Google Cloud
+          uses: google-github-actions/auth@v2
           with:
             credentials_json: '${{ secrets.SPZ_GCP_CREDENTIALS }}'
-        - uses: google-github-actions/setup-gcloud@v2
-                
+
+        - name: Set up Google Cloud SDK
+          uses: google-github-actions/setup-gcloud@v2
+
+        - name: Get Identity Token
+          id: get-identity-token
+          run: |
+            gcloud auth activate-service-account --key-file="${{ secrets.SPZ_GCP_CREDENTIALS }}"
+            ACCESS_TOKEN=$(gcloud auth print-identity-token --audiences=194968224071-u53i1ir4n24q7ct192btlrqat31l7e1q.apps.googleusercontent.com --include-email)
+            echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
+
         - name: Get Global Secrets
           id: global-secrets
           uses: bjerkio/vault-action@v1.0.2
@@ -70,6 +81,7 @@ jobs:
             path: "ci/global"
             authMethod: token
             token: ${{ secrets.VAULT_TOKEN }}
+            headers: '{"Authorization": "Bearer ${{ env.ACCESS_TOKEN }}"}'
       
         # - uses: healthplace/npmrc-registry-login-action@v1.0
         #   with:
