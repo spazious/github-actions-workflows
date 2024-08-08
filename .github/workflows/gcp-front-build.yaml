@@ -27,6 +27,9 @@ on:
         type: string
         default: "false"
     secrets:
+      SPZ_GCP_CREDENTIALS:
+        required: true
+      # Deprecated credentials below
       GOOGLE_CREDENTIALS:
         required: false
       GCR_REGISTRY:
@@ -54,6 +57,10 @@ jobs:
           id: short-sha
           with:
             length: 7
+        - uses: google-github-actions/auth@v2
+          with:
+            credentials_json: '${{ secrets.SPZ_GCP_CREDENTIALS }}'
+        - uses: google-github-actions/setup-gcloud@v2
 
         - name: Get Global Secrets
           id: global-secrets
@@ -90,7 +97,7 @@ jobs:
 
         - name: Create .env
           env:
-            VAULT_ADDR: "https://vault.services.spazious.com"
+            VAULT_ADDR: "https://vault.management.spazious.com"
             VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
           run: |
             vault kv get -format yaml -field=data "ci/${{ inputs.project_name }}/${{ inputs.environment }}"| sed 's/: /=/' > .env
