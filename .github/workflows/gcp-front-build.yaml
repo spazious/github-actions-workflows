@@ -66,10 +66,13 @@ jobs:
         - name: Set up Google Cloud SDK
           uses: google-github-actions/setup-gcloud@v2
 
+        - name: Create credentials file
+          run: echo "${{ secrets.SPZ_GCP_CREDENTIALS }}" > ${HOME}/gcp-key.json
+
         - name: Get Identity Token
           id: get-identity-token
           run: |
-            gcloud auth activate-service-account --key-file="${{ secrets.SPZ_GCP_CREDENTIALS }}"
+            gcloud auth activate-service-account --key-file="${HOME}/gcp-key.json"
             ACCESS_TOKEN=$(gcloud auth print-identity-token --audiences=194968224071-u53i1ir4n24q7ct192btlrqat31l7e1q.apps.googleusercontent.com --include-email)
             echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
 
