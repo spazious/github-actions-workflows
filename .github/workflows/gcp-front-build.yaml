@@ -113,7 +113,7 @@ jobs:
           with:
             registry: gcr.io
             username: _json_key
-            password: ${{ secrets.GOOGLE_CREDENTIALS }}
+            password: ${{ secrets.SPZ_GCP_CREDENTIALS }}
 
         - name: Build and push the tagged docker image
           env:
